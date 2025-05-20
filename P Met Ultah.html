@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Sofia!</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+      font-family: 'Comic Sans MS', cursive;
+      text-align: center;
+      overflow-x: hidden;
+    }
+    h1 {
+      font-size: 3em;
+      margin-top: 50px;
+      animation: bounce 1s infinite alternate;
+    }
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-20px); }
+    }
+    p {
+      font-size: 1.3em;
+      margin: 20px;
+    }
+    button {
+      padding: 15px 30px;
+      border: none;
+      background: #ff6f91;
+      color: white;
+      font-size: 1.2em;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #ff3c6f;
+    }
+    .heart {
+      font-size: 2em;
+      color: red;
+      cursor: pointer;
+      animation: pulse 1s infinite;
+      margin: 5px;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    .balloon {
+      font-size: 2em;
+      cursor: pointer;
+      animation: float 2s infinite ease-in-out;
+      margin: 5px;
+    }
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0); }
+    }
+    #confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+    }
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #fff;
+      opacity: 0.8;
+      animation: confettiFall 3s linear infinite;
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(100vh) rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <audio id="bgm" src="https://cdn.pixabay.com/audio/2023/04/01/audio_d5c4476ff7.mp3" autoplay loop></audio>
+  <audio id="clickSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_bf145cce54.mp3"></audio>
+
+  <h1>🎉 Sofia Si Kocak 🎉</h1>
+  <p>Eh eh jangan klik-klik sembarangan ya 👀</p>
+
+  <button onclick="showWish()">Klik sini deh!</button>
+
+  <div id="wish" style="display:none;">
+    <p>Selamat ulang tahun Sofia! 🎂🎈</p>
+    <p>Semoga panjang umur, sehat selalu, semoga cepet dapet kerja yang kamu pengen… jangan lupa traktir gua ya si kocak 🤪❤️</p>
+    <p class="heart" onclick="nextGame()">❤️</p>
+  </div>
+
+  <div id="game" style="display:none;">
+    <p>Klik 5 love buat dapet pesan spesial 👉</p>
+    <div id="loves"></div>
+  </div>
+
+  <div id="ending" style="display:none;">
+    <h1 id="endingText"></h1>
+    <p id="personalMessage"></p>
+    <p>Coba klik balon-balon ini deh 🎈👇</p>
+    <div id="balloons"></div>
+    <div id="confetti"></div>
+  </div>
+
+  <script>
+    function showWish() {
+      document.querySelector('button').style.display = 'none';
+      document.getElementById('wish').style.display = 'block';
+    }
+
+    function playSound() {
+      document.getElementById('clickSound').play();
+    }
+
+    function nextGame() {
+      playSound();
+      document.getElementById('wish').style.display = 'none';
+      document.getElementById('game').style.display = 'block';
+      let loves = document.getElementById('loves');
+      loves.innerHTML = '';
+      for (let i = 0; i < 5; i++) {
+        let heart = document.createElement('span');
+        heart.innerHTML = '❤️';
+        heart.className = 'heart';
+        heart.onclick = function() {
+          playSound();
+          heart.remove();
+          if(document.querySelectorAll('#loves .heart').length === 0) {
+            document.getElementById('game').style.display = 'none';
+            document.getElementById('ending').style.display = 'block';
+            spawnBalloons();
+            showEndingText();
+            spawnConfetti();
+          }
+        }
+        loves.appendChild(heart);
+      }
+    }
+
+    function spawnBalloons() {
+      let balloons = document.getElementById('balloons');
+      balloons.innerHTML = '';
+      let messages = ["Wkwk mantap!", "Jangan nakal ya!", "Udah cantik aja", "Wuhuu cakep!", "Duh meleleh gua 😏"];
+      for (let i = 0; i < 7; i++) {
+        let balloon = document.createElement('span');
+        balloon.innerHTML = '🎈';
+        balloon.className = 'balloon';
+        balloon.onclick = function() {
+          playSound();
+          alert(messages[Math.floor(Math.random()*messages.length)]);
+          balloon.remove();
+          if(document.querySelectorAll('#balloons .balloon').length === 0) {
+            alert('🎉 Horee semua balonnya udah di klik! Makasih ya Sofia si kocak ❤️');
+          }
+        }
+        balloons.appendChild(balloon);
+      }
+    }
+
+    function showEndingText() {
+      let text = "🥺❤️ Sofia, makasih udah lahir ke dunia ini. Kalo kamu senyum sekarang, berarti kamu suka sama gua, si kocak 😏";
+      let i = 0;
+      function typing() {
+        if (i < text.length) {
+          document.getElementById('endingText').innerHTML += text.charAt(i);
+          i++;
+          setTimeout(typing, 50);
+        } else {
+          document.getElementById('personalMessage').innerText = 'Dari gua nih: Semoga makin bahagia, makin sayang sama diri sendiri, sehat terus, dan rezeki lancar. Jangan lupa ketawa terus kayak biasa ya, gua seneng liatnya 😁❤️';
+        }
+      }
+      typing();
+    }
+
+    function spawnConfetti() {
+      let confettiContainer = document.getElementById('confetti');
+      for (let i = 0; i < 50; i++) {
+        let confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.backgroundColor = 'hsl(' + Math.random()*360 + ',100%,70%)';
+        confetti.style.animationDuration = (2 + Math.random()*3) + 's';
+        confettiContainer.appendChild(confetti);
+      }
+    }
+  </script>
+</body>
+</html>
